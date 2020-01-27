@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<!-- 
+		 ViewResolver는 Controller가 반환한 결과를 어떤 View를 통해서 처리하는 것이 좋을지 해석하는 역할
+		 가장 흔하게 사용하는 설정은 servlet-context.xml에 정의된 InternalResourceViewResolver 임
+	 -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 업로드하는 파일의 이름이 한글일 경우 깨지는 문제를 해결 -->
+		<beans:property name="defaultEncoding" value="utf-8"></beans:property>
+		<!-- 1024 * 1024 * 10 bytes 10 MB , 한 번의 Request로 전달 될 수 있는 최대의 크기를 의미-->
+		<beans:property name="maxUploadSize" value="104857560"></beans:property>
+		<!-- 1024 * 1024 * 10 bytes 2 MB, 하나의 파일 최대 크기-->
+		<beans:property name="maxUploadSizePerFile" value="2097152"></beans:property>
+		<!-- 지정된 크기 이상의 데이터를 이시파일의 형태로 보관, 절대경로를 이용하려면 URI형태로 제공해야 하기 때문에 'file:/'로 시작하도록 함. -->
+		<beans:property name="uploadTempDir" value="file:/C:/upload/tmp"></beans:property>
+		<!-- 메모리상에서 유지하는 최대의 크기를 의미함 -->
+		<beans:property name="maxInMemorySize" value="10485756"></beans:property>
+	</beans:bean>
+	<!-- 
+		 지정된 패키지를 조사(스캔)하도록 설정되어 있음.
+		 해당 패키지에 선언된 클래스들을 조사하면서 스프링에서 객체(Bean) 설정에 사용되는 어노테이션들을 가진 클래스들을 파악하고 필요하다면 이를 객체로 생성해서 관리하게 됨.
+	 -->
+	<context:component-scan base-package="org.zerock.controller" />
+	<context:component-scan base-package="org.zerock.exception" />
+	
+	
+</beans:beans>
